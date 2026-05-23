@@ -1,0 +1,369 @@
+﻿@model List<DashboardModelView>
+@{
+    ViewData["Title"] = "RSMS Dashboard";
+}
+
+<div class="ucaa-header">
+
+    <div class="ucaa-left">
+        <img src="~/images/ucaa.png" alt="UCAA Logo" class="ucaa-logo" />
+    </div>
+
+    <div class="ucaa-center">
+        <h2 class="system-title">
+            Remote Shelter Monitoring System
+        </h2>
+    </div>
+
+</div>
+
+<div class="top-nav">
+
+    <div class="nav-center">
+        <div class="nav-item dropdown">
+            <button class="nav-link">Other Sites ▾</button>
+        </div>
+
+        <div class="nav-item dropdown">
+            <a asp-action="GetCSV" asp-controller="Logs" class="nav-link">
+                Download Logs ▾
+            </a>
+        </div>
+
+        <div class="nav-item dropdown">
+            <button class="nav-link">Configurations ▾</button>
+        </div>
+    </div>
+    
+    <div class="nav-right">
+        @* < class="nav-item dropdown"> *@
+
+        <button class="nav-link system-health-btn">System Health</button>
+
+        @* <div class="system-health"> *@
+        @* <span>System Health</span> *@
+        @* </div> *@
+
+        <div class="notification">
+            @* <span class="bell">🔔</span> *@
+
+            @* use a better bell *@
+
+            <img src="~/images/bell2.jpeg" alt="Notifications" class="bell"/>
+            <span class="notif-badge critical">0</span>
+            <span class="notif-badge warning">0</span>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="dashboard-container">
+    <div class="shelter-grid">
+
+        @foreach (var shelter in Model)
+        {
+            var badgeClass = shelter.Status switch
+            {
+                ShelterStatus.Alert => "status-alert",
+                ShelterStatus.Warning => "status-warning",
+                ShelterStatus.Ok => "status-ok",
+                _ => "status-unknown"
+            };
+            var statusText = shelter.Status.ToString().ToUpper();
+
+            <div class="shelter-card">
+
+                <h2 class="shelter-title">@shelter.ShelterName.ToUpper()</h2>
+
+                <div class="status-row">
+                    <span class="status-label">STATUS</span>
+                    <span class="status-badge @badgeClass" id="status-banner-@shelter.ShelterCode">
+                        @statusText
+                    </span>
+                </div>
+                
+
+                <a class="view-feed-btn"
+                   href="http://rsms:CaaRsms@10.10.40.249:8889/dvorShelter"
+                   target="_blank">
+                    View Live Feed
+                </a>
+
+                <!-- Temperature & Humidity -->
+                <div class="sensor-grid">
+
+                    <a asp-controller="ShelterHistory"
+                       asp-action="Temperature"
+                       asp-route-code="@shelter.ShelterCode"
+                       class="sensor-box sensor-button">
+
+                        <div class="sensor-title">Temperature</div>
+                        <i class="fas fa-thermometer-half"></i>
+
+                        <div class="sensor-value"
+                             id="temp-@shelter.ShelterCode">
+                            @shelter.Temperature °C
+                        </div>
+
+                        <div class="dot gray-dot"
+                             id="temp-dot-@shelter.ShelterCode">
+
+                        </div>
+
+                    </a>
+
+                    @* trying the same appearance for humidity like that of temperature *@
+                    <a asp-controller="ShelterHistory"
+                       asp-action="Humidity"
+                       asp-route-code="@shelter.ShelterCode"
+                       class="sensor-box sensor-button">
+
+                        <div class="sensor-title">Humidity</div>
+                        <i class="fas fa-droplet"></i>
+
+                        <div class="sensor-value"
+                             id="hum-@shelter.ShelterCode">
+                            @shelter.Humidity %
+                        </div>
+
+                        <div class="dot gray-dot"
+                             id="hum-dot-@shelter.ShelterCode">
+
+                        </div>
+
+                    </a>
+
+                    @* trying the same appearance for shelter access like that of temperature *@
+
+<!-- Shelter Access -->
+                    <a asp-controller="ShelterHistory"
+                    asp-action="ShelterAccess"
+                    asp-route-code="@shelter.ShelterCode"
+                    class="sensor-box sensor-button">
+
+                        <div class="sensor-title">Shelter Access</div>
+                        <i class="fas fa-door-open"></i>
+
+                        <div class="sensor-value"
+                            id="access-@shelter.ShelterCode">
+                            --
+                        </div>
+
+                        <div class="dot gray-dot"
+                            id="ink-dot-@shelter.ShelterCode"></div>
+
+                    </a>
+
+                    <!-- Smoke -->
+                    <a asp-controller="ShelterHistory"
+                    asp-action="Smoke"
+                    asp-route-code="@shelter.ShelterCode"
+                    class="sensor-box sensor-button">
+
+                        <div class="sensor-title">Smoke</div>
+                        <i class="fas fa-fire"></i>
+
+                        <div class="sensor-value"
+                            id="smoke-@shelter.ShelterCode">
+                            --
+                        </div>
+
+                        <div class="dot gray-dot"
+                            id="smk-dot-@shelter.ShelterCode"></div>
+
+                    </a>
+
+                    <!-- Battery -->
+
+                    <a asp-controller="ShelterHistory"
+                    asp-action="Battery"
+                    asp-route-code="@shelter.ShelterCode"
+                    class="sensor-box sensor-button">
+
+                        <div class="sensor-title">Battery</div>
+                        <i class="fas fa-battery-full"></i>
+
+                        <div class="sensor-value"
+                            id="battery-@shelter.ShelterCode">
+                            --
+                        </div>
+
+                        <div class="dot gray-dot"
+                            id="bat-dot-@shelter.ShelterCode"></div>
+
+                            @* default green dot *@
+                        <div class="dot green-dot"></div>
+                    </a>
+
+                    <!-- Stabilizer -->
+                    <a asp-controller="ShelterHistory"
+                    asp-action="Stabilizer"
+                    asp-route-code="@shelter.ShelterCode"
+                    class="sensor-box sensor-button">
+
+                        <div class="sensor-title">Stabilizer</div>
+                        <i class="fas fa-bolt"></i>
+
+                        <div class="sensor-value"
+                            id="stabilizer-@shelter.ShelterCode">
+                            --
+                        </div>
+
+                        @* default dot is green not grey *@
+                        
+                        @* <div class="dot gray-dot"
+                            id="stab-dot-@shelter.ShelterCode"></div> *@
+
+                            @* default green dot *@
+
+                        <div class="dot green-dot"></div>
+                    </a>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="/lib/microsoft-signalr/signalr.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/shelterHub")
+            .withAutomaticReconnect()
+            .build();
+
+        // -----------------------------
+        // Join shelter groups
+        // -----------------------------
+        const shelterCodes = ["ILS002", "DVOR003", "GP001"];
+
+        async function joinShelterGroups() {
+            for (const code of shelterCodes) {
+                await connection.invoke("JoinShelterGroup", code);
+                console.log("Joined group:", code);
+            }
+        }
+
+        connection.onreconnected(async () => {
+            console.log("Reconnected — rejoining groups");
+            await joinShelterGroups();
+        });
+
+        // -----------------------------
+        // Receive updates
+        // -----------------------------
+connection.on("ShelterUpdated", data => {
+
+    console.log("SignalR update:", data);
+
+    const shelter = data.shelterCode;
+    if (!shelter) return;
+
+    function updateValue(elementId, value) {
+        const el = document.getElementById(elementId);
+        if (el) el.innerText = value ?? "--";
+    }
+
+    function updateDot(dotId, status) {
+
+        const dot = document.getElementById(dotId);
+        if (!dot) return;
+
+        dot.classList.remove(
+            "red-dot",
+            "yellow-dot",
+            "green-dot",
+            "gray-dot"
+        );
+
+        switch ((status || "").toLowerCase()) {
+            case "alert":
+                dot.classList.add("red-dot");
+                break;
+
+            case "warning":
+                dot.classList.add("yellow-dot");
+                break;
+
+            case "ok":
+                dot.classList.add("green-dot");
+                break;
+
+            default:
+                dot.classList.add("gray-dot");
+                break;
+        }
+    }
+
+    function updateBadge(badgeId, status) {
+
+        const badge = document.getElementById(badgeId);
+        if (!badge) return;
+
+        const normalized = (status || "unknown").toLowerCase();
+
+        badge.innerText = normalized.toUpperCase();
+
+        badge.classList.remove(
+            "status-alert",
+            "status-warning",
+            "status-ok",
+            "status-unknown"
+        );
+
+        switch (normalized) {
+            case "alert":
+                badge.classList.add("status-alert");
+                break;
+
+            case "warning":
+                badge.classList.add("status-warning");
+                break;
+
+            case "ok":
+                badge.classList.add("status-ok");
+                break;
+
+            default:
+                badge.classList.add("status-unknown");
+                break;
+        }
+    }
+
+    // -----------------------------
+    // Update numeric values
+    // -----------------------------
+    updateValue(`temp-${shelter}`, `${data.temperature} °C`);
+    updateValue(`hum-${shelter}`, `${data.humidity} %`);
+
+    // -----------------------------
+    // Independent sensor dots
+    // -----------------------------
+    updateDot(`temp-dot-${shelter}`, data.temperatureStatus);
+    updateDot(`hum-dot-${shelter}`, data.humidityStatus);
+    updateDot(`ink-dot-${shelter}`, data.intrudeStatus);
+    updateDot(`smk-dot-${shelter}`, data.smokeStatus);
+
+    // -----------------------------
+    // Overall badge
+    // -----------------------------
+    updateBadge(`status-banner-${shelter}`, data.overallStatus);
+});
+
+            // -----------------------------
+            // Start connection
+            // -----------------------------
+            connection.start()
+                .then(async () => {
+                    console.log("SignalR connected");
+                    await joinShelterGroups();
+                })
+                .catch(err => console.error("SignalR error:", err));
+
+    </script>
+}
