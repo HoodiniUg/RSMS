@@ -103,14 +103,14 @@ document.getElementById("last7DaysBtn").
 		startDate !== "" || endDate !== "";
 	try
 	{
-		const url = `/ShelterHistory/GetTemperatureHistory` +
+		const url = `/TempHistory/GetTemperatureHistory` +
 			`?shelterCode=${window.shelterCode}` +
 			`&startDate=${startDate}` + `&endDate=${endDate}`;
 
 		console.log(url);
 		const response = await fetch(url);
 
-	const data = await response.json();
+		const data = await response.json();
 
 	//Clear existing Chart data
 	window.tempChart.data.labels = [];

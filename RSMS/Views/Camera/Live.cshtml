@@ -36,7 +36,7 @@
        
             <div class="sensor-item">
             <span><i class="fas fa-thermometer-half"></i> Temperature:</span>
-                <span id="tempValue">-- °C</span>
+            <span id="currentTemp">-- °C</span>
             </div>
             <div class="sensor-item">
             <span><i class="fas fa-droplet"></i> Humidity:</span>
@@ -53,4 +53,9 @@
 
 @section Scripts {
     <link rel="stylesheet" href="~/css/livefeed.css" />
+    <script>
+        window.shelterCode ="@ViewBag.ShelterCode";
+    </script>
+    <script src="/lib/microsoft-signalr/signalr.js"></script>
+    <script src="/js/tempSignalR.js"></script>
 }

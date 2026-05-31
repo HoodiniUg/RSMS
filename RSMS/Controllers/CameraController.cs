@@ -11,7 +11,7 @@ namespace RSMS.Controllers
             //IP Camera Urls
             var cameraFeeds = new Dictionary<string, string>
             {
-                {"ILS002","" },
+                {"ILS002","http://192.168.11.79:8080/video" },
                 {"DVOR003", "http://rsms:CaaRsms@10.10.40.249:8889/dvorShelter" },
                 {"GP001", "" }
             };
