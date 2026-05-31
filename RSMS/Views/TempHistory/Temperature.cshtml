@@ -63,45 +63,63 @@
 			</div>
 		</div>
 
-		<!--History Content-->
-		<div class="history-section">
+		<!--Temperature Summary-->
+		<div class="summary-section">
 
-			<h4>Historical Temperature</h4>
+			<div class="summary-card">
+				<div class="summary-icon">
+					<i class="fas fa-temperature-half"></i>
+				</div>
+				<div class="summary-info">
+					<span class="summary-title">Avg Temperature</span>
+					<h2 id="avgTemp">-- °C</h2>
+				</div>
 
-			
-			<table class="history-table">
+			</div>
 
-				<thead>
-					<tr>
-						<th>Timestamp</th>
-						<th>Event Type</th>
-						<th>Description</th>
-					</tr>
-				</thead>
+			<div class="summary-card">
+				<div class="summary-icon max">
+					<i class="fas fa-arrow-up"></i>
+				</div>
+				<div class="summary-info">
+					<span class="summary-title">Max Temperature</span>
+					<h2 id="maxTemp">-- °C</h2>
+				</div>
 
-				<tbody>
+			</div>
 
-					<tr>
-						<td>2024-03-15 11:00</td>
-						<td>Reading Recorded</td>
-						<td>Temperature: 28.5°C</td>
-					</tr>
+			<div class="summary-card">
+				<div class="summary-icon min">
+					<i class="fas fa-arrow-down"></i>
+				</div>
+				<div class="summary-info">
+					<span class="summary-title">Min Temperature</span>
+					<h2 id="minTemp">-- °C</h2>
 
-					<tr>
-						<td>2024-03-15 10:35</td>
-						<td>Alert Triggered</td>
-						<td>Temperature exceeded 28°C threshold</td>
-					</tr>
+				</div>
 
-				</tbody>
+			</div>
 
-			</table>
+			<div class="summary-card">
+				<div class="summary-icon status">
+					<i class="fas fa-circle-check"></i>
+				</div>
+
+				<div class="summary-info">
+					<span class="summary-title">Sensor Status</span>
+					<h2 id="sensorStatus">--</h2>
+				</div>
+
+			</div>
+
 		</div>
+		
 	</div>
 
 </div>
 
 @section Scripts{
+	<link rel="stylesheet" asp-append-version="true" href="~/css/TemperaturePage.css" />
     <script>
         window.shelterCode ="@ViewBag.ShelterCode";
 	</script>
@@ -112,5 +130,6 @@
 
 	<script src="/lib/microsoft-signalr/signalr.js"></script>
     <script src="/js/tempSignalR.js"></script>
+	<script src="/js/tempSummary.js"></script>
 
 }
